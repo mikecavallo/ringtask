@@ -1,38 +1,29 @@
-import Fastify from 'fastify';
-import { initDatabase } from './db/index.js';
-import { registerRoutes } from './api/routes.js';
-import { seedNumbers } from './services/number-pool.js';
-import { expireNumbers } from './services/number-pool.js';
+import { buildApp } from './app.js';
 import { config } from './config.js';
+import { initDatabase } from './db/index.js';
+import { expireNumbers, seedNumbers, MOCK_POOL_NUMBERS } from './services/number-pool.js';
 import { pollPendingPayments } from './services/payments-solana.js';
 
 async function main() {
-  // Initialize database
   initDatabase();
-  console.log('✅ Database initialized');
 
-  // Seed phone numbers from config
-  if (config.TWILIO_PHONE_NUMBERS.length > 0) {
-    await seedNumbers(config.TWILIO_PHONE_NUMBERS);
-    console.log(`✅ Seeded ${config.TWILIO_PHONE_NUMBERS.length} phone numbers`);
+  const app = await buildApp({ logger: true });
+
+  const pool = config.MOCK_PROVIDERS ? MOCK_POOL_NUMBERS : config.TWILIO_PHONE_NUMBERS;
+  const added = await seedNumbers(pool);
+  app.log.info(`Number pool: ${pool.length} configured, ${added} newly added`);
+  if (config.MOCK_PROVIDERS) {
+    app.log.warn('MOCK MODE: Twilio and Retell are replaced by local mocks. No SMS is sent and no calls are placed.');
   }
 
-  // Start Fastify
-  const app = Fastify({ logger: true });
-  await registerRoutes(app);
+  if (config.SOLANA_TREASURY_ADDRESS) setInterval(pollPendingPayments, 15_000);
 
-  // Poll Solana payments every 15 seconds
-  setInterval(pollPendingPayments, 15_000);
-
-  // Number expiration check every 5 minutes
   setInterval(async () => {
     const expired = await expireNumbers();
-    if (expired > 0) console.log(`♻️ Expired ${expired} number assignments`);
+    if (expired > 0) app.log.info(`Expired ${expired} number assignments`);
   }, 5 * 60 * 1000);
 
   await app.listen({ port: config.API_PORT, host: '0.0.0.0' });
-  console.log(`🚀 RingTask API running on port ${config.API_PORT}`);
-  console.log(`   MCP server available via: npm run mcp`);
 }
 
 main().catch((err) => {

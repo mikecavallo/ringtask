@@ -1,10 +1,7 @@
-import { Connection, PublicKey, Keypair, LAMPORTS_PER_SOL, clusterApiUrl } from '@solana/web3.js';
-import bs58 from 'bs58';
+import { Connection, PublicKey, Keypair, LAMPORTS_PER_SOL, clusterApiUrl, type ParsedTransactionWithMeta } from '@solana/web3.js';
 import { randomUUID } from 'crypto';
-import { getDb } from '../db/index.js';
-import { users } from '../db/schema.js';
-import { eq } from 'drizzle-orm';
 import { config } from '../config.js';
+import { addCredits } from './auth.js';
 
 // Solana Pay-style payment tracking
 // Agent sends SOL to our treasury with a unique reference → we detect it → add credits
@@ -14,7 +11,7 @@ const connection = new Connection(
   'confirmed'
 );
 
-// In-memory pending payments (production: use DB)
+// EXPERIMENTAL: pending payments are held in memory and are lost on restart.
 interface PendingPayment {
   id: string;
   userId: string;
@@ -119,11 +116,11 @@ export async function checkPaymentStatus(paymentId: string): Promise<{
       // Verify the transaction
       const tx = await connection.getParsedTransaction(sig.signature, { maxSupportedTransactionVersion: 0 });
 
-      if (tx && !tx.meta?.err) {
-        // Transaction confirmed — add credits
+      const expectedLamports = Math.round(payment.amountSol * LAMPORTS_PER_SOL);
+      if (tx && isPaymentToTreasury(tx, payment.treasuryAddress, expectedLamports)) {
+        // Transaction confirmed and pays the treasury at least the quoted amount
         payment.status = 'confirmed';
         await addCredits(payment.userId, payment.credits);
-        console.log(`🪙 Solana: Added ${payment.credits} credits to user ${payment.userId} (tx: ${sig.signature})`);
         return { status: 'confirmed', credits: payment.credits, signature: sig.signature };
       }
     }
@@ -142,12 +139,16 @@ export async function pollPendingPayments() {
   }
 }
 
-async function addCredits(userId: string, amount: number) {
-  const db = getDb();
-  const user = db.select().from(users).where(eq(users.id, userId)).get();
-  if (!user) throw new Error('User not found');
-  db.update(users)
-    .set({ credits: user.credits + amount })
-    .where(eq(users.id, userId))
-    .run();
+/**
+ * True when a confirmed, successful transaction increased the treasury's SOL balance
+ * by at least `expectedLamports`. Without this check any transaction that merely
+ * referenced the payment's reference key would have been accepted.
+ */
+export function isPaymentToTreasury(tx: ParsedTransactionWithMeta, treasuryAddress: string, expectedLamports: number): boolean {
+  if (!tx.meta || tx.meta.err) return false;
+  const keys = tx.transaction.message.accountKeys.map((k) => k.pubkey.toBase58());
+  const idx = keys.indexOf(treasuryAddress);
+  if (idx === -1) return false;
+  const received = (tx.meta.postBalances[idx] ?? 0) - (tx.meta.preBalances[idx] ?? 0);
+  return received >= expectedLamports;
 }

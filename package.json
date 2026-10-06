@@ -1,23 +1,29 @@
 {
   "name": "ringtask",
   "version": "0.1.0",
-  "description": "AI phone agent service — temp numbers, SMS, and voice missions",
+  "description": "MCP-first API that gives AI agents phone numbers, SMS, and AI voice calls (Twilio + Retell)",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "start": "node dist/index.js",
+    "mcp:mock": "RINGTASK_MOCK=1 tsx src/mcp-server.ts",
+    "dev:mock": "RINGTASK_MOCK=1 tsx src/index.ts",
     "dev": "tsx src/index.ts",
     "mcp": "tsx src/mcp-server.ts",
+    "mcp:start": "node dist/mcp-server.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@fastify/formbody": "^9.0.0",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@solana/spl-token": "^0.4.14",
     "@solana/web3.js": "^1.98.4",
     "better-sqlite3": "^11.7.0",
-    "bs58": "^6.0.0",
     "dotenv": "^17.3.1",
     "drizzle-orm": "^0.38.0",
     "fastify": "^5.2.0",
@@ -32,6 +38,7 @@
     "@types/uuid": "^10.0.0",
     "drizzle-kit": "^0.30.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.7"
   }
 }

@@ -3,8 +3,8 @@ import { drizzle } from 'drizzle-orm/better-sqlite3';
 import * as schema from './schema.js';
 import { config } from '../config.js';
 
-const sqlite = new Database(config.DATABASE_URL);
-sqlite.pragma('journal_mode = WAL');
+export const sqlite: Database.Database = new Database(config.DATABASE_URL);
+if (config.DATABASE_URL !== ':memory:') sqlite.pragma('journal_mode = WAL');
 sqlite.pragma('foreign_keys = ON');
 
 export const db = drizzle(sqlite, { schema });
@@ -47,8 +47,11 @@ export function initDatabase() {
       duration_seconds INTEGER,
       credits_used REAL,
       retell_call_id TEXT,
+      summary TEXT,
+      recording_url TEXT,
       created_at INTEGER NOT NULL
     );
+    CREATE INDEX IF NOT EXISTS calls_retell_call_id ON calls(retell_call_id);
     CREATE TABLE IF NOT EXISTS usage_logs (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL REFERENCES users(id),
@@ -57,7 +60,18 @@ export function initDatabase() {
       metadata TEXT,
       created_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS processed_webhooks (
+      id TEXT PRIMARY KEY,
+      source TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
   `);
+
+  // Lightweight forward migration for databases created before these columns existed.
+  const callColumns = (sqlite.prepare('PRAGMA table_info(calls)').all() as Array<{ name: string }>).map((c) => c.name);
+  for (const col of ['summary', 'recording_url']) {
+    if (!callColumns.includes(col)) sqlite.exec(`ALTER TABLE calls ADD COLUMN ${col} TEXT`);
+  }
 }
 
 export function getDb() { return db; }
