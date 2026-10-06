@@ -25,7 +25,7 @@ interface PendingPayment {
 
 const pendingPayments = new Map<string, PendingPayment>();
 
-// SOL price (simplified — in production use an oracle or price feed)
+// SOL price (simplified: in production use an oracle or price feed)
 const SOL_PRICE_USD = config.SOL_PRICE_USD || 150; // fallback, should be fetched live
 
 // Credit pricing in USD
@@ -74,7 +74,7 @@ export async function createSolanaPayment(userId: string, packageId: string): Pr
 
   pendingPayments.set(payment.id, payment);
 
-  // Solana Pay URL — agents can parse this directly
+  // Solana Pay URL: agents can parse this directly
   // Format: solana:<recipient>?amount=<amount>&reference=<reference>&label=RingTask&message=<credits>+credits
   const solanaPayUrl = `solana:${treasuryAddress}?amount=${pkg.sol}&reference=${reference}&label=RingTask&message=${pkg.credits}%20credits`;
 
@@ -125,7 +125,7 @@ export async function checkPaymentStatus(paymentId: string): Promise<{
       }
     }
   } catch (err) {
-    // Reference not found yet — still pending
+    // Reference not found yet: still pending
   }
 
   return { status: 'pending' };
