@@ -39,6 +39,8 @@ export const calls = sqliteTable('calls', {
   durationSeconds: integer('duration_seconds'),
   creditsUsed: real('credits_used'),
   retellCallId: text('retell_call_id'),
+  summary: text('summary'),
+  recordingUrl: text('recording_url'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
@@ -48,5 +50,12 @@ export const usageLogs = sqliteTable('usage_logs', {
   action: text('action').notNull(),
   creditsUsed: real('credits_used').notNull(),
   metadata: text('metadata'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+});
+
+
+export const processedWebhooks = sqliteTable('processed_webhooks', {
+  id: text('id').primaryKey(),
+  source: text('source').notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });

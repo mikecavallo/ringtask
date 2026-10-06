@@ -3,7 +3,7 @@ import Hero from './sections/Hero';
 import HowItWorks from './sections/HowItWorks';
 import Products from './sections/Products';
 import MCPIntegration from './sections/MCPIntegration';
-import Pricing from './sections/Pricing';
+import Status from './sections/Status';
 import UseCases from './sections/UseCases';
 import Footer from './sections/Footer';
 import Nav from './components/Nav';
@@ -23,8 +23,8 @@ export default function App() {
       <motion.div {...fadeUp}><HowItWorks /></motion.div>
       <motion.div {...fadeUp}><Products /></motion.div>
       <motion.div {...fadeUp}><MCPIntegration /></motion.div>
-      <motion.div {...fadeUp}><Pricing /></motion.div>
       <motion.div {...fadeUp}><UseCases /></motion.div>
+      <motion.div {...fadeUp}><Status /></motion.div>
       <Footer />
     </div>
   );

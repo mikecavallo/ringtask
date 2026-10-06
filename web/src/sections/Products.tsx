@@ -6,11 +6,11 @@ const products = [
     tagline: 'Give your agent a real phone number',
     color: 'cyan',
     features: [
-      'Provision US numbers instantly',
-      'Send & receive SMS programmatically',
-      'Account verification & OTP capture',
-      'Temp or persistent — you choose',
-      'Webhook or MCP callbacks',
+      'Lease numbers from your own Twilio pool',
+      'Send and receive SMS',
+      'Per-user ownership and automatic expiry',
+      'Cooldown before a number is reused',
+      'Credit-metered: 1 credit per SMS',
     ],
     icon: (
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" strokeWidth="1.2" strokeLinecap="round">
@@ -22,15 +22,15 @@ const products = [
     ),
   },
   {
-    title: 'Voice Missions',
-    tagline: 'Send an AI on a phone call',
+    title: 'Voice Calls',
+    tagline: 'An AI agent makes the call for you',
     color: 'orange',
     features: [
-      'Describe the mission in plain English',
-      'AI makes the call autonomously',
-      'Real-time transcripts & recordings',
-      'Multiple voice styles & personas',
-      'Structured results & summaries',
+      'Describe the goal in plain English',
+      'Placed by a Retell voice agent',
+      'Agent says up front that it is an AI assistant',
+      'Transcript and summary after the call',
+      'Billed per started minute',
     ],
     icon: (
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" strokeWidth="1.2" strokeLinecap="round">
@@ -48,9 +48,9 @@ export default function Products() {
     <section id="products" className="py-32 px-6">
       <div className="max-w-6xl mx-auto">
         <h2 className="font-heading font-bold text-4xl md:text-5xl text-center mb-4">
-          Two <span className="text-orange glow-orange">Products</span>
+          What It <span className="text-orange glow-orange">Does</span>
         </h2>
-        <p className="text-white/40 text-center mb-20 text-lg">One platform. Complete phone infrastructure for AI.</p>
+        <p className="text-white/40 text-center mb-20 text-lg">Two capabilities behind one API and one MCP server.</p>
 
         <div className="grid md:grid-cols-2 gap-8">
           {products.map((p, i) => (

@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 const steps = [
   {
     num: '01',
-    title: 'Get a Number',
-    desc: 'Provision a real phone number in seconds via MCP or API. US numbers, ready for SMS and voice.',
+    title: 'Lease a Number',
+    desc: 'Your agent calls get_number and leases a number from a pool you own in Twilio. Leases expire automatically.',
     icon: (
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" strokeWidth="1.5" strokeLinecap="round">
         <rect x="5" y="2" width="14" height="20" rx="2" />
@@ -14,8 +14,8 @@ const steps = [
   },
   {
     num: '02',
-    title: 'Send Your Mission',
-    desc: 'Tell your agent what to do — make a call, send an SMS, verify an account. Natural language or structured.',
+    title: 'Text or Call',
+    desc: 'Send an SMS, or start a voice call: describe the goal in plain English and a Retell voice agent places the call.',
     icon: (
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff6b35" strokeWidth="1.5" strokeLinecap="round">
         <path d="M22 2L11 13" />
@@ -26,7 +26,7 @@ const steps = [
   {
     num: '03',
     title: 'Get Results',
-    desc: 'Receive transcripts, SMS logs, call recordings, and structured data. All via MCP callbacks.',
+    desc: 'Read replies with get_messages and fetch the call transcript and summary with get_call_result.',
     icon: (
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" strokeWidth="1.5" strokeLinecap="round">
         <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
@@ -43,7 +43,7 @@ export default function HowItWorks() {
         <h2 className="font-heading font-bold text-4xl md:text-5xl text-center mb-4">
           How It <span className="text-cyan glow-cyan">Works</span>
         </h2>
-        <p className="text-white/40 text-center mb-20 text-lg">Three steps. That's it.</p>
+        <p className="text-white/40 text-center mb-20 text-lg">Three tool calls.</p>
 
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((s, i) => (
