@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { REPO_URL } from '../links';
 
 const links = [
   { label: 'How It Works', href: '#how' },
   { label: 'Products', href: '#products' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'MCP Tools', href: '#mcp' },
   { label: 'Use Cases', href: '#usecases' },
+  { label: 'Status', href: '#status' },
 ];
 
 export default function Nav() {
@@ -14,7 +16,7 @@ export default function Nav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-xl border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#" className="font-heading font-bold text-xl tracking-tight">
+        <a href="#top" className="font-heading font-bold text-xl tracking-tight">
           <span className="text-cyan glow-cyan">Ring</span>
           <span className="text-white">Task</span>
         </a>
@@ -27,15 +29,15 @@ export default function Nav() {
             </a>
           ))}
           <a
-            href="#cta"
+            href={REPO_URL}
             className="text-sm font-medium px-5 py-2 rounded-lg bg-cyan/10 text-cyan border border-cyan/20 hover:bg-cyan/20 transition-all"
           >
-            Get Started
+            GitHub
           </a>
         </div>
 
         {/* Mobile toggle */}
-        <button onClick={() => setOpen(!open)} className="md:hidden text-white/60 p-2">
+        <button onClick={() => setOpen(!open)} className="md:hidden text-white/60 p-2" aria-label="Toggle menu">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             {open ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
           </svg>
@@ -57,8 +59,8 @@ export default function Nav() {
                   {l.label}
                 </a>
               ))}
-              <a href="#cta" onClick={() => setOpen(false)} className="text-cyan font-medium">
-                Get Started →
+              <a href={REPO_URL} onClick={() => setOpen(false)} className="text-cyan font-medium">
+                GitHub →
               </a>
             </div>
           </motion.div>

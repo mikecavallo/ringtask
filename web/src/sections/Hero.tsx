@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { REPO_URL } from '../links';
 
 function SoundWave() {
   const bars = 32;
@@ -56,7 +57,7 @@ function PulsingPhone() {
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+    <section id="top" className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-cyan/5 rounded-full blur-[120px]" />
@@ -72,7 +73,7 @@ export default function Hero() {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan/20 bg-cyan/5 text-cyan text-sm font-medium mb-8"
         >
           <span className="w-2 h-2 rounded-full bg-cyan animate-pulse" />
-          MCP-Native Phone Infrastructure
+          Open-source prototype · MCP server
         </motion.div>
 
         {/* Headline */}
@@ -94,9 +95,9 @@ export default function Hero() {
           transition={{ delay: 0.5 }}
           className="text-lg md:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Temp phone numbers for AI agents. Voice missions that make real calls.
+          Phone numbers, SMS, and AI voice calls for AI agents, exposed as <span className="text-cyan">MCP</span> tools.
           <br className="hidden md:block" />
-          Pay with <span className="text-orange">SOL</span> or Stripe. Ship in minutes via <span className="text-cyan">MCP</span>.
+          Built for real tasks like appointment booking and customer callbacks. Runs on your own Twilio and Retell accounts.
         </motion.p>
 
         {/* CTAs */}
@@ -107,10 +108,10 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
           <a
-            href="#cta"
+            href={REPO_URL}
             className="px-8 py-3.5 rounded-lg bg-cyan text-dark font-heading font-bold text-lg hover:bg-cyan/90 transition-all hover:shadow-[0_0_30px_rgba(0,240,255,0.3)]"
           >
-            Start Building
+            View on GitHub
           </a>
           <a
             href="#how"
@@ -131,9 +132,6 @@ export default function Hero() {
             <SoundWave />
             <PulsingPhone />
           </div>
-          <p className="text-xs text-white/20 font-mono tracking-widest uppercase">
-            ━━━ active call ━━━ transmitting ━━━
-          </p>
         </motion.div>
       </div>
 
